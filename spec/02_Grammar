@@ -1,0 +1,236 @@
+# 2. Formal Grammar (EBNF)
+
+Το παρόν έγγραφο ορίζει το **συντακτικό (syntax)** της γλώσσας προγραμματισμού **ΓΛΩΣΣΑ** με χρήση **EBNF (Extended Backus–Naur Form)**.
+
+Η γραμματική περιγράφει αποκλειστικά τη δομή έγκυρων προγραμμάτων και **δεν περιλαμβάνει σημασιολογικούς κανόνες**.
+
+---
+
+## 2.1 Notation
+
+* Τα μη τερματικά περικλείονται σε αγκύλες: `<nonterminal>`
+* Τα τερματικά (λέξεις–κλειδιά, σύμβολα) γράφονται αυτούσια
+* `{ X }` δηλώνει επανάληψη (0 ή περισσότερες φορές)
+* `[ X ]` δηλώνει προαιρετικό στοιχείο
+* `|` δηλώνει εναλλακτικές
+
+---
+
+## 2.2 Program Structure
+
+```ebnf
+<program> ::=
+    ΠΡΟΓΡΑΜΜΑ <identifier>
+    [ <declarations_section> ]
+    ΑΡΧΗ
+        <statement_list>
+    ΤΕΛΟΣ_ΠΡΟΓΡΑΜΜΑΤΟΣ
+```
+
+---
+
+## 2.3 Declarations
+
+```ebnf
+<declarations_section> ::=
+    ΜΕΤΑΒΛΗΤΕΣ <declaration_list>
+
+<declaration_list> ::=
+    <declaration> { <declaration> }
+
+<declaration> ::=
+    <type> ':' <identifier_list>
+
+<type> ::=
+    ΑΚΕΡΑΙΕΣ | ΠΡΑΓΜΑΤΙΚΕΣ | ΧΑΡΑΚΤΗΡΕΣ | ΛΟΓΙΚΕΣ
+
+<identifier_list> ::=
+    <identifier> { ',' <identifier> }
+```
+
+---
+
+## 2.4 Statements
+
+```ebnf
+<statement_list> ::=
+    <statement> { <statement> }
+
+<statement> ::=
+      <assignment_statement>
+    | <if_statement>
+    | <select_statement>
+    | <while_statement>
+    | <for_statement>
+    | <repeat_statement>
+    | <io_statement>
+    | <call_statement>
+```
+
+---
+
+## 2.5 Assignment Statement
+
+```ebnf
+<assignment_statement> ::=
+    <variable> '<-' <expression>
+```
+
+---
+
+## 2.6 Selection Statements
+
+### If Statement
+
+```ebnf
+<if_statement> ::=
+    ΑΝ <expression> ΤΟΤΕ
+        <statement_list>
+    [ ΑΛΛΙΩΣ
+        <statement_list> ]
+    ΤΕΛΟΣ_ΑΝ
+```
+
+### Select Statement
+
+```ebnf
+<select_statement> ::=
+    ΕΠΙΛΕΞΕ <expression>
+        { <case_clause> }
+        [ ΑΛΛΙΩΣ <statement_list> ]
+    ΤΕΛΟΣ_ΕΠΙΛΟΓΩΝ
+
+<case_clause> ::=
+    ΠΕΡΙΠΤΩΣΗ <expression_list> ':' <statement_list>
+
+<expression_list> ::=
+    <expression> { ',' <expression> }
+```
+
+---
+
+## 2.7 Iteration Statements
+
+### While Statement
+
+```ebnf
+<while_statement> ::= 
+    ΟΣΟ <expression> ΕΠΑΝΑΛΑΒΕ
+        <statement_list>
+    ΤΕΛΟΣ_ΕΠΑΝΑΛΗΨΗΣ
+```
+
+### For Statement
+
+```ebnf
+<for_statement> ::= 
+    ΓΙΑ <identifier> ΑΠΟ <expression> ΜΕΧΡΙ <expression> [ ΜΕ_ΒΗΜΑ <expression> ]
+        <statement_list>
+    ΤΕΛΟΣ_ΕΠΑΝΑΛΗΨΗΣ
+```
+
+### Repeat Statement
+
+```ebnf
+<repeat_statement> ::=
+    ΑΡΧΗ_ΕΠΑΝΑΛΗΨΗΣ
+        <statement_list>
+    ΜΕΧΡΙΣ_ΟΤΟΥ <expression>
+```
+
+---
+
+## 2.8 Input / Output Statements
+
+```ebnf
+<io_statement> ::=
+      <read_statement>
+    | <write_statement>
+
+<read_statement> ::=
+    ΔΙΑΒΑΣΕ <variable_list>
+
+<write_statement> ::=
+    ΓΡΑΨΕ <expression_list>
+
+<variable_list> ::=
+    <variable> { ',' <variable> }
+```
+
+---
+
+## 2.9 Subprogram Calls
+
+```ebnf
+<call_statement> ::=
+    ΚΑΛΕΣΕ <identifier> [ '(' <expression_list> ')' ]
+```
+
+---
+
+## 2.10 Variables and Arrays
+
+```ebnf
+<variable> ::=
+    <identifier> [ '[' <expression> ']' ]
+```
+
+---
+
+## 2.11 Expressions
+
+Οι εκφράσεις ορίζονται με ιεραρχία ώστε να αποτυπώνεται προτεραιότητα τελεστών.
+
+```ebnf
+<expression> ::= <logical_expression>
+
+<logical_expression> ::= 
+    <logical_term> { 'Ή' <logical_term> }
+
+<logical_term> ::= 
+    <logical_factor> { ΚΑΙ <logical_factor> }
+
+<logical_factor> ::= 
+      [ ΟΧΙ ] <relational_expression>
+
+<relational_expression> ::= 
+    <arithmetic_expression> [ <relational_operator> <arithmetic_expression> ]
+
+<relational_operator> ::= 
+    '=' | '<' | '>' | '<=' | '>=' | '<>'
+
+<arithmetic_expression> ::= 
+    <term> { ('+' | '-') <term> }
+
+<term> ::= 
+    <power> { ('*' | '/') <power> }
+
+<power> ::= 
+    <factor> { '^' <factor> }
+
+<factor> ::= 
+      <number>
+    | <variable>
+    | '(' <expression> ')'
+    | <function_call>
+
+<number> ::= <integer> | <real>
+```
+
+---
+
+## 2.12 Function Calls
+
+```ebnf
+<function_call> ::=
+    <identifier> '(' <expression_list> ')'
+```
+
+---
+
+## 2.13 Undefined Syntactic Aspects
+
+* Συντακτική προτεραιότητα του τελεστή `^`
+* Χρήση μονοδιάστατων έναντι πολυδιάστατων πινάκων
+* Επιτρεπτότητα κενών εντολών
+* Ακριβής δομή υποπρογραμμάτων (δηλώσεις παραμέτρων)
